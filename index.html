@@ -16,7 +16,7 @@
   </header>
   <!--add a container for search bar, a container for previous seraches, acontainer for search results with weather, five day forecast  -->
   <div class="row mainContent">
-    <div class="col-2 searchContainer">
+    <div class="col-3 searchContainer">
       <div class="searchBar">
         <h2 class="searchHeader">Search for a City:</h2>
         <input class="searchInput" type="text" placeholder="City Name">
@@ -31,7 +31,26 @@
       </div>
     </div>
     <div class="col results">
-      <div class="row city"></div>
+      <div class="row city">
+        <div class="cityResults">
+          <!-- include desired city, current date, and icon of current weather -->
+          <div class="location">
+            <h3>Your City (Date)</h3>
+          </div>
+          <div class="temp">
+            <p>Temp:</p>
+          </div>
+          <div class="wind">
+            <p>Wind:</p>
+          </div>
+          <div class="humidity">
+            <p>Humidity:</p>
+          </div>
+          <div class="uv">
+            <p>UV Index:</p>
+          </div>
+        </div>
+      </div>
       <div class="row fiveDay"></div>
     </div>
   </div>

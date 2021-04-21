@@ -2,7 +2,7 @@
 
 
 .siteHeader {
-  margin-top: 2px;
+  margin: 1%;
   background-color: aqua;
   padding-bottom: 2px;
 }
@@ -28,4 +28,17 @@
   font-weight: bold;
   width: 100%;
   margin-bottom: 2%;
+}
+
+.results {
+  margin: 2% 3% 2% 1%;
+}
+
+.cityResults {
+  border: 2px solid black;
+  height: 30%;
+}
+
+.cityResults div {
+  margin-bottom: 3%;
 }
