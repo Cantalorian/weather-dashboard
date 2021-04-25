@@ -2,11 +2,7 @@ var citySearch = document.querySelector(".searchInput");
 var searchBtn = document.querySelector(".searchBtn");
 
 // previous search elements
-var prvSearch1 = document.querySelector(".prvSearch1");
-var prvSearch2 = document.querySelector(".prvSearch2");
-var prvSearch3 = document.querySelector(".prvSearch3");
-var prvSearch4 = document.querySelector(".prvSearch4");
-var prvSearch5 = document.querySelector(".prvSearch5");
+var prvSearches = document.querySelector(".pastSearch");
 
 // current day search elements
 var currentCity = document.querySelector(".searchCity");
@@ -21,19 +17,54 @@ console.log(mainIcon);
 var pastSearchBtn = document.querySelector(".pastSearch");
 // 5 day elements
 
+var searches = [];
+
+function grabPrevSearches() {
+  var previousSearches = "";
+  var previousSearch = localStorage.getItem("previousSearches");
+  if (previousSearch) {
+    searches = JSON.parse(previousSearch);
+    for (var i = 0; i < searches.length; i++) {
+      previousSearches += `<button id="lastSearch" class="col-3 prvSearch">${searches[i]}</button>`;
+    }
+  }
+  prvSearches.innerHTML = previousSearches;
+}
+grabPrevSearches();
+
+function setPreviousSearches(city) {
+  if (searches.length === 5) {
+    searches.shift();
+    searches.push(city);
+    localStorage.setItem("previousSearches", JSON.stringify(searches));
+    grabPrevSearches();
+  } else {
+    searches.push(city);
+    localStorage.setItem("previousSearches", JSON.stringify(searches));
+  }
+}
+
 function parseWeatherData(data) {
   var fiveDayBlock = "<h4>5-Day Forecast:</h4>";
   var fiveDay = document.querySelector(".fiveDay");
   for (var i = 0; i < 6; i++) {
     if (i === 0) {
       mainIcon.innerHTML = `<img src="http://openweathermap.org/img/wn/${data.daily[i].weather[0].icon}@2x.png">`;
-      var dailyTemp = (data.daily[0].temp.min + data.daily[0].temp.max)/2.;
+      var dailyTemp = (data.daily[0].temp.min + data.daily[0].temp.max) / 2;
       currentTemp.innerHTML = dailyTemp.toPrecision(4) + " °F";
       currentWind.innerHTML = data.daily[0].wind_speed + " MPH";
       currentHumidity.innerHTML = data.daily[0].humidity + " %";
-      uv.innerHTML = data.daily[0].uvi;
+      var uviStyle = "";
+      if (data.daily[0].uvi <= 2) {
+        uviStyle = `<span class="green"><b>${data.daily[0].uvi}</b></span>`;
+      } else if (data.daily[0].uvi <= 7) {
+        uviStyle = `<span class="yellow"><b>${data.daily[0].uvi}</b></span>`;
+      } else {
+        uviStyle = `<span class="red"><b>${data.daily[0].uvi}</b></span>`;
+      }
+      uv.innerHTML = uviStyle;
     } else {
-      var temp = (data.daily[i].temp.min + data.daily[i].temp.max) /2;
+      var temp = (data.daily[i].temp.min + data.daily[i].temp.max) / 2;
       var wind = data.daily[i].wind_speed;
       var humidity = data.daily[i].humidity;
       var weatherIcon = data.daily[i].weather[0].icon;
@@ -59,14 +90,9 @@ function parseWeatherData(data) {
   fiveDay.innerHTML = fiveDayBlock;
 }
 
-// collect city entered into search bar for API fetch call
-$(".searchBtn").on("click", function () {
-  var wantCity = citySearch.value.charAt(0).toUpperCase() + citySearch.value.slice(1);
-  currentCity.textContent = wantCity;
-  // currentDate.textContent =;
-  console.log(wantCity);
+function search(city) {
   // local storage
-  localStorage.setItem("prvSearch1", wantCity);
+  setPreviousSearches(wantCity);
   // var pastSearch = document.createElement("button");
   fetch(
     "http://api.openweathermap.org/geo/1.0/direct?q=" +
@@ -92,7 +118,14 @@ $(".searchBtn").on("click", function () {
       console.log(data);
       parseWeatherData(data);
     });
+}
 
+// collect city entered into search bar for API fetch call
+$(".searchBtn").on("click", function () {
+  var wantCity =
+    citySearch.value.charAt(0).toUpperCase() + citySearch.value.slice(1);
+  currentCity.textContent = wantCity;
+  search(wantCity);
 });
 
 // Populate dashboard with information for today
@@ -100,4 +133,3 @@ $(".searchBtn").on("click", function () {
 // Populate 5day forecast with desired city results
 
 // Add buttons to reference previously searched cities
-

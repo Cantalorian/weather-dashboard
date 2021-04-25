@@ -31,6 +31,15 @@
   margin-bottom: 2%;
 }
 
+.prvSearch {
+  margin-top: 2%;
+  background-color: grey;
+  border-radius: 5px;
+  font-weight: bold;
+  width: 100%;
+  margin-bottom: 2%;
+}
+
 .city {
   margin-bottom: 2%;
 }
@@ -60,4 +69,19 @@
 .searchCity {
   font-size: xx-large;
   font-weight: bold;
+}
+
+.green {
+  background-color: rgb(54, 173, 54);
+  border-radius: 5px;
+}
+
+.yellow {
+  background-color: rgb(230, 230, 17);
+  border-radius: 5px;
+}
+
+.red {
+  background-color: red;
+  border-radius: 5px;
 }
