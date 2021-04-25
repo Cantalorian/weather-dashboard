@@ -29,6 +29,10 @@ function grabPrevSearches() {
     }
   }
   prvSearches.innerHTML = previousSearches;
+  $(".prvSearch").on("click", function (event) {
+    search(event.target.textContent)
+    currentCity.textContent = event.target.textContent;
+  });
 }
 grabPrevSearches();
 
@@ -92,11 +96,11 @@ function parseWeatherData(data) {
 
 function search(city) {
   // local storage
-  setPreviousSearches(wantCity);
+  setPreviousSearches(city);
   // var pastSearch = document.createElement("button");
   fetch(
     "http://api.openweathermap.org/geo/1.0/direct?q=" +
-      wantCity +
+      city +
       "&appid=2719aefbd0c2d8924e8efd5f26306318"
   )
     .then(function (response) {
@@ -115,7 +119,6 @@ function search(city) {
       return weather.json();
     })
     .then(function (data) {
-      console.log(data);
       parseWeatherData(data);
     });
 }
@@ -128,6 +131,10 @@ $(".searchBtn").on("click", function () {
   search(wantCity);
 });
 
+$(".prvSearch").on("click", function (event) {
+  currentCity.textContent = event.target.textContent;
+  search(event.target.textContent);
+});
 // Populate dashboard with information for today
 
 // Populate 5day forecast with desired city results
