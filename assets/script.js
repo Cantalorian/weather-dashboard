@@ -12,19 +12,20 @@ var currentWind = document.querySelector(".currentWind");
 var currentHumidity = document.querySelector(".currentHumidity");
 var uv = document.querySelector(".currentUv");
 var mainIcon = document.querySelector(".weatherIcon");
-console.log(mainIcon);
 
 var pastSearchBtn = document.querySelector(".pastSearch");
 // 5 day elements
 
 var searches = [];
 
+// var pastSearch = document.createElement("button");
 function grabPrevSearches() {
   var previousSearches = "";
   var previousSearch = localStorage.getItem("previousSearches");
   if (previousSearch) {
     searches = JSON.parse(previousSearch);
     for (var i = 0; i < searches.length; i++) {
+      // Add buttons to reference previously searched cities
       previousSearches += `<button id="lastSearch" class="col-3 prvSearch">${searches[i]}</button>`;
     }
   }
@@ -48,6 +49,7 @@ function setPreviousSearches(city) {
   }
 }
 
+// Populate dashboard with information for today
 function parseWeatherData(data) {
   var fiveDayBlock = "<h4>5-Day Forecast:</h4>";
   var fiveDay = document.querySelector(".fiveDay");
@@ -68,6 +70,7 @@ function parseWeatherData(data) {
       }
       uv.innerHTML = uviStyle;
     } else {
+      // Populate 5day forecast with desired city results
       var temp = (data.daily[i].temp.min + data.daily[i].temp.max) / 2;
       var wind = data.daily[i].wind_speed;
       var humidity = data.daily[i].humidity;
@@ -94,10 +97,10 @@ function parseWeatherData(data) {
   fiveDay.innerHTML = fiveDayBlock;
 }
 
+// collect city entered into search bar for API fetch call
 function search(city) {
   // local storage
   setPreviousSearches(city);
-  // var pastSearch = document.createElement("button");
   fetch(
     "http://api.openweathermap.org/geo/1.0/direct?q=" +
       city +
@@ -123,7 +126,6 @@ function search(city) {
     });
 }
 
-// collect city entered into search bar for API fetch call
 $(".searchBtn").on("click", function () {
   var wantCity =
     citySearch.value.charAt(0).toUpperCase() + citySearch.value.slice(1);
@@ -135,8 +137,5 @@ $(".prvSearch").on("click", function (event) {
   currentCity.textContent = event.target.textContent;
   search(event.target.textContent);
 });
-// Populate dashboard with information for today
 
-// Populate 5day forecast with desired city results
 
-// Add buttons to reference previously searched cities
