@@ -32,6 +32,10 @@
   margin-bottom: 2%;
 }
 
+.searchBtn:hover {
+  background-color: teal;
+}
+
 .prvSearch {
   margin-top: 2%;
   background-color: grey;
@@ -41,8 +45,18 @@
   margin-bottom: 2%;
 }
 
+.prvSearch:hover {
+  background-color: white
+}
+
 .city {
   margin-bottom: 2%;
+  background-color: aqua;
+  font-weight: bold;
+}
+
+.currentDate {
+  font-size: larger;
 }
 
 .results {
@@ -73,16 +87,19 @@
 }
 
 .green {
-  background-color: rgb(54, 173, 54);
+  background-color: green;
   border-radius: 5px;
+  padding: 3px;
 }
 
 .yellow {
   background-color: rgb(230, 230, 17);
   border-radius: 5px;
+  padding: 3px;
 }
 
 .red {
   background-color: red;
   border-radius: 5px;
+  padding: 3px;
 }

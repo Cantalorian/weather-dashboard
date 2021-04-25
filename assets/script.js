@@ -1,5 +1,6 @@
 var citySearch = document.querySelector(".searchInput");
 var searchBtn = document.querySelector(".searchBtn");
+var today = moment();
 
 // previous search elements
 var prvSearches = document.querySelector(".pastSearch");
@@ -33,6 +34,7 @@ function grabPrevSearches() {
   $(".prvSearch").on("click", function (event) {
     search(event.target.textContent);
     currentCity.textContent = event.target.textContent;
+    currentDate.textContent = today.format("dddd, MMMM Do YYYY");
   });
 }
 grabPrevSearches();
@@ -62,7 +64,7 @@ function parseWeatherData(data) {
       currentHumidity.innerHTML = data.daily[0].humidity + " %";
       var uviStyle = "";
       if (data.daily[0].uvi <= 2) {
-        uviStyle = `<span class="green"><b>${data.daily[0].uvi}</b></span>`;
+        uviStyle = `<span class="green">${data.daily[0].uvi}</span>`;
       } else if (data.daily[0].uvi <= 7) {
         uviStyle = `<span class="yellow"><b>${data.daily[0].uvi}</b></span>`;
       } else {
@@ -75,9 +77,10 @@ function parseWeatherData(data) {
       var wind = data.daily[i].wind_speed;
       var humidity = data.daily[i].humidity;
       var weatherIcon = data.daily[i].weather[0].icon;
+      var thisDay = new Date(data.daily[i].dt * 1000).toLocaleDateString("en-US");
       var forecast = `<div class="col-2">
                 <div>
-                  <h4 class="date1"></h4>
+                  <h4 class="date1">${thisDay}</h4>
                 </div>
                 <div></div>
                 <img src="http://openweathermap.org/img/wn/${weatherIcon}@2x.png">
@@ -85,15 +88,15 @@ function parseWeatherData(data) {
                   <p>Temp: <span>${temp.toPrecision(4)} °F</span></p>
                 </div>
                 <div>
-                  <p>Wind: <span>${wind} MPH</span></p>
+                <p>Wind: <span>${wind} MPH</span></p>
                 </div>
                 <div>
-                  <p>Humidity: <span>${humidity} %</span></p>
+                <p>Humidity: <span>${humidity} %</span></p>
                 </div>
-              </div>`;
-      fiveDayBlock += forecast;
-    }
-  }
+                </div>`;
+                fiveDayBlock += forecast;
+              }
+            }
   fiveDay.innerHTML = fiveDayBlock;
 }
 
@@ -103,10 +106,10 @@ function search(city) {
   setPreviousSearches(city);
   fetch(
     "http://api.openweathermap.org/geo/1.0/direct?q=" +
-      city +
+    city +
       "&appid=2719aefbd0c2d8924e8efd5f26306318"
-  )
-    .then(function (response) {
+      )
+      .then(function (response) {
       return response.json();
     })
     .then(function (data) {
@@ -123,17 +126,24 @@ function search(city) {
     })
     .then(function (data) {
       parseWeatherData(data);
+    })
+    .catch (function (error) {
+      currentCity.textContent = "No City Found";
     });
-}
-
-$(".searchBtn").on("click", function () {
-  var wantCity =
+  }
+  
+  $(".searchBtn").on("click", function () {
+    var wantCity =
     citySearch.value.charAt(0).toUpperCase() + citySearch.value.slice(1);
-  currentCity.textContent = wantCity;
-  search(wantCity);
-});
-
-$(".prvSearch").on("click", function (event) {
-  currentCity.textContent = event.target.textContent;
-  search(event.target.textContent);
-});
+    currentCity.textContent = wantCity;
+    search(wantCity);
+    citySearch.value = "";
+    currentDate.textContent = today.format("dddd, MMMM Do YYYY");
+  });
+  
+  $(".prvSearch").on("click", function (event) {
+    currentCity.textContent = event.target.textContent;
+    search(event.target.textContent);
+    currentDate.textContent = today.format("dddd, MMMM Do YYYY");
+  });
+  
