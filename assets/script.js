@@ -15,32 +15,53 @@ var currentTemp = document.querySelector(".currentTemp");
 var currentWind = document.querySelector(".currentWind");
 var currentHumidity = document.querySelector(".currentHumidity");
 var uv = document.querySelector(".currentUv");
-
-// 5 day elements
-
+var mainIcon = document.querySelector(".weatherIcon");
+console.log(mainIcon);
 
 var pastSearchBtn = document.querySelector(".pastSearch");
+// 5 day elements
 
-// <div class="col-2 day1">
-//           <div>
-//             <h4 class="date1">Date</h4>
-//           </div>
-//           <div class="icon1"></div>
-//           <div>
-//             <p>Temp: <span class="temp1"></span></p>
-//           </div>
-//           <div>
-//             <p>Wind: <span class="wind1"></span></p>
-//           </div>
-//           <div>
-//             <p>Humidity: <span class="humidity1"></span></p>
-//           </div>
-//         </div>
-
+function parseWeatherData(data) {
+  var fiveDayBlock = "<h4>5-Day Forecast:</h4>";
+  var fiveDay = document.querySelector(".fiveDay");
+  for (var i = 0; i < 6; i++) {
+    if (i === 0) {
+      mainIcon.innerHTML = `<img src="http://openweathermap.org/img/wn/${data.daily[i].weather[0].icon}@2x.png">`;
+      var dailyTemp = (data.daily[0].temp.min + data.daily[0].temp.max)/2.;
+      currentTemp.innerHTML = dailyTemp.toPrecision(4) + " °F";
+      currentWind.innerHTML = data.daily[0].wind_speed + " MPH";
+      currentHumidity.innerHTML = data.daily[0].humidity + " %";
+      uv.innerHTML = data.daily[0].uvi;
+    } else {
+      var temp = (data.daily[i].temp.min + data.daily[i].temp.max) /2;
+      var wind = data.daily[i].wind_speed;
+      var humidity = data.daily[i].humidity;
+      var weatherIcon = data.daily[i].weather[0].icon;
+      var forecast = `<div class="col-2">
+                <div>
+                  <h4 class="date1"></h4>
+                </div>
+                <div></div>
+                <img src="http://openweathermap.org/img/wn/${weatherIcon}@2x.png">
+                <div>
+                  <p>Temp: <span>${temp.toPrecision(4)} °F</span></p>
+                </div>
+                <div>
+                  <p>Wind: <span>${wind} MPH</span></p>
+                </div>
+                <div>
+                  <p>Humidity: <span>${humidity} %</span></p>
+                </div>
+              </div>`;
+      fiveDayBlock += forecast;
+    }
+  }
+  fiveDay.innerHTML = fiveDayBlock;
+}
 
 // collect city entered into search bar for API fetch call
 $(".searchBtn").on("click", function () {
-  var wantCity = citySearch.value;
+  var wantCity = citySearch.value.charAt(0).toUpperCase() + citySearch.value.slice(1);
   currentCity.textContent = wantCity;
   // currentDate.textContent =;
   console.log(wantCity);
@@ -48,31 +69,30 @@ $(".searchBtn").on("click", function () {
   localStorage.setItem("prvSearch1", wantCity);
   // var pastSearch = document.createElement("button");
   fetch(
-    "http://api.openweathermap.org/geo/1.0/direct?q=" + wantCity + "&appid=2719aefbd0c2d8924e8efd5f26306318"
+    "http://api.openweathermap.org/geo/1.0/direct?q=" +
+      wantCity +
+      "&appid=2719aefbd0c2d8924e8efd5f26306318"
   )
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
       return fetch(
-        "https://api.openweathermap.org/data/2.5/onecall?lat=" + data[0].lat.toString() + "&lon=" + data[0].lon.toString() + "&units=imperial&exclude=minutely,hourly,alerts&appid=2719aefbd0c2d8924e8efd5f26306318"
+        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+          data[0].lat.toString() +
+          "&lon=" +
+          data[0].lon.toString() +
+          "&units=imperial&exclude=minutely,hourly,alerts&appid=2719aefbd0c2d8924e8efd5f26306318"
       );
     })
     .then(function (weather) {
       return weather.json();
     })
-    .then(function (test) {
-      console.log(test);
+    .then(function (data) {
+      console.log(data);
+      parseWeatherData(data);
     });
 
-  // fetch ("https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid=49e7d1f6cfdc32ff53e27623841fb5cb")
-  // .then(function(response) {
-  //   return response.json();
-  // })
-  // .then(function(data) {
-  //   console.log(data);
-  // });
 });
 
 // Populate dashboard with information for today
@@ -81,13 +101,3 @@ $(".searchBtn").on("click", function () {
 
 // Add buttons to reference previously searched cities
 
-// api key
-// 2719aefbd0c2d8924e8efd5f26306318
-// fetch (
-// "http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=49e7d1f6cfdc32ff53e27623841fb5cb")
-//   .then(function(response) {
-//     return response.json();
-//   })
-//   .then(function(data) {
-//     console.log(data);
-//   })
