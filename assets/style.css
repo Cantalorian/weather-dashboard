@@ -1,6 +1,3 @@
-
-
-
 .siteHeader {
   margin: 1%;
   background-color: aqua;
@@ -21,6 +18,10 @@
   border-bottom: 2px solid black;
   margin-left: 2%;
   align-content: center;
+}
+
+.pastSearch {
+  margin-left: 2%;
 }
 
 .searchBtn {

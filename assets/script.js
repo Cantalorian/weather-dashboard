@@ -31,7 +31,7 @@ function grabPrevSearches() {
   }
   prvSearches.innerHTML = previousSearches;
   $(".prvSearch").on("click", function (event) {
-    search(event.target.textContent)
+    search(event.target.textContent);
     currentCity.textContent = event.target.textContent;
   });
 }
@@ -137,5 +137,3 @@ $(".prvSearch").on("click", function (event) {
   currentCity.textContent = event.target.textContent;
   search(event.target.textContent);
 });
-
-
