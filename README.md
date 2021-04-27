@@ -5,4 +5,7 @@
 - UV index is also indicated with corresponding color to indicate favorable, moderate, severe
 - Predicted weather displays a 5-day forecast for the city
 
+Link to live URL:
+https://cantalorian.github.io/weather-dashboard/
+
 ![Screenshot 2021-04-25 175627](https://user-images.githubusercontent.com/78125561/116013875-a80b1f00-a5ef-11eb-99c4-4a600e4f50d8.png)
